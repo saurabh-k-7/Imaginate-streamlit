@@ -1,1 +1,11 @@
-streamlit torch diffusers transformers cuda-python pillow
+torch 
+diffusers 
+transformers 
+cuda-python 
+pillow
+streamlit
+pandas
+numpy
+matplotlib
+scikit-learn
+requests

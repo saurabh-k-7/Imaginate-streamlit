@@ -4,7 +4,7 @@ import tensorflow as tf
 import cv2
 
 # Load pre-trained model
-model_path = r"training\models1\imageclassifier1.h5"
+model_path = r"models\models1\imageclassifier.h5"
 model = tf.keras.models.load_model(model_path)
 
 

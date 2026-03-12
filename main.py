@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 import tensorflow as tf
 import os
+import gc #garabage collection for memory management for generation section
 from io import BytesIO  # Required for converting images for download
 
 # Importing functions from models
@@ -43,39 +44,41 @@ if not os.path.exists(temp_dir):
     os.makedirs(temp_dir)
 
 # Image Generation Section
+# Image Generation Section
 if option == "✨ Generate Image":
     st.markdown('<h1 class="title-style">Generate Stunning Images</h1>', unsafe_allow_html=True)
 
-    # Input for prompt
+    # 1. Input for prompt
     prompt = st.text_input(
         "💡 Enter your creative prompt:",
         "A scenic view of the mountains at sunrise",
     )
 
-    # Button to generate image
-    if st.button("🎨 Generate Image"):
-        with st.spinner("✨ Generating your masterpiece... please wait!"):
-            generated_image = generate_image(prompt)  # Call the image generation function
+    # 2. The Button and Spinner logic
+if st.button("🎨 Generate Image"):
+    # We updated the message here to warn the user about the CPU speed
+    with st.spinner("✨ Generating... This takes 2-4 minutes on EC2 CPU. Please wait!"):
+        try:
+            generated_image = generate_image(prompt)  # This calls your CPU-optimized function
+                
+            if generated_image:
+                st.success("🎉 Image generated successfully!")
+                st.image(generated_image, caption="Generated Image", use_container_width=True)
 
-        # Check if the image was generated successfully
-        if generated_image:
-            st.success("🎉 Image generated successfully!")
-            st.image(generated_image, caption="Generated Image", use_container_width=True)
+                # 3. Preparation for Download
+                buffered = BytesIO()
+                generated_image.save(buffered, format="PNG")
+                buffered.seek(0)
 
-            # Convert PIL image to bytes for download
-            buffered = BytesIO()
-            generated_image.save(buffered, format="PNG")
-            buffered.seek(0)
-
-            # Add a download button
-            st.download_button(
-                label="💾 Download Image",
-                data=buffered,
-                file_name="generated_image.png",
-                mime="image/png",
-            )
-        else:
-            st.error("⚠️ Failed to generate the image. Please try again.")
+                st.download_button(
+                    label="💾 Download Image",
+                    data=buffered,
+                    file_name="generated_image.png",
+                    mime="image/png",
+                )
+        except Exception as e:
+            st.error(f"⚠️ An error occurred: {e}")
+    gc.collect()
 
 # Image Classification Section
 elif option == "🙂 Emotion Detection (Happy/Sad)":

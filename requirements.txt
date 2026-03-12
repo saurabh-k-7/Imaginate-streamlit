@@ -1,9 +1,9 @@
 diffusers==0.31.0
-numpy==2.2.1
+numpy>=1.23.5,<2.0.0
 opencv_python==4.10.0.84
 Pillow==11.0.0
 streamlit==1.40.2
-# tensorflow
-# tensorflow_intel
-torch==2.5.1+cu121
+torch==2.5.1
+torchvision==0.20.1
 transformers==4.46.0
+tensorflow-cpu==2.15.0

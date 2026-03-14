@@ -1,0 +1,15 @@
+services:
+  imaginate-app:
+    build: .
+    container_name: imaginate-container
+    ports:
+      - "8501:8501"
+    # This volume prevents re-downloading the 5GB model every time you restart
+    volumes:
+      - hf_model_cache:/root/.cache/huggingface
+    restart: unless-stopped
+    # Forces Streamlit to be visible to the web
+    command: streamlit run main.py --server.port=8501 --server.address=0.0.0.0
+
+volumes:
+  hf_model_cache:
